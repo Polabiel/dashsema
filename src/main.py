@@ -33,14 +33,14 @@ GRAPH_STYLE = {
     'paper_bgcolor': COLORS['background'],
     'plot_bgcolor': COLORS['background'],
     'font': {'color': COLORS['text']},
-    'title': {'font': {'size': 24, 'color': COLORS['primary']}}
+    'title': {'font': {'size': 20, 'color': COLORS['primary']}}
 }
 
 # Atualizar parse_contents para corrigir warning de datas
 def parse_contents(contents):
     """Função para processar o arquivo carregado"""
     try:
-        content_type, content_string = contents.split(',')
+        _content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         df = pd.read_csv(
             io.StringIO(decoded.decode('utf-8')),
@@ -95,20 +95,24 @@ def atualizar_graficos(df):
     )
 
     # Gráfico Tags
-    tags_df = pd.Series([x.strip() for tags in df['TAGS'].dropna() for x in tags.split(',')]).value_counts().head(10)
+    tags_df = pd.Series([x.strip() for tags in df['TAGS'].dropna() for x in tags.split(',')]).value_counts().head(10).reset_index()
+    tags_df.columns = ['Tag', 'Quantidade']
     fig_tags = px.bar(
         tags_df,
-        title='Top 10 Tags'
+        x='Tag',
+        y='Quantidade', 
+        title='Tags',
+        labels={'Tag': 'Tags', 'Quantidade': 'Número de Ocorrências'}
     )
 
-    # Gráfico Atendentes
-    atendentes_df = df['ATENDENTE'].value_counts().head(10).reset_index()
-    atendentes_df.columns = ['Atendente', 'Quantidade']
+    # Gráfico de Colaboradores
+    colaboradores_df = df['ATENDENTE'].value_counts().head(10).reset_index()
+    colaboradores_df.columns = ['Colaborador', 'Quantidade']
     fig_atendentes = px.bar(
-        atendentes_df,
-        x='Atendente',
+        colaboradores_df,
+        x='Colaborador',
         y='Quantidade',
-        title='Top 10 Atendentes'
+        title='Distribuição dos Colaboradores'
     )
 
     # KPIs
