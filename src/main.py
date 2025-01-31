@@ -137,7 +137,7 @@ def get_github_avatar():
         if response.status_code == 200:
             return response.json()['avatar_url']
         return None
-    except:
+    except requests.exceptions.RequestException:
         return None
 
 def criar_tabela_followup(df):
