@@ -398,5 +398,5 @@ def update_dashboard(contents, filename):
     except Exception as e:
         return [dash.no_update] * 7 + [f'Erro ao processar arquivo: {str(e)}']
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+if __name__ == "__main__":
+    app.run(port=8080, dev_tools_ui=True, debug=True, host="127.0.0.1")
